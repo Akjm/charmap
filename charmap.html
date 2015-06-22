@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+        background-color: #202020;
+        color: white;
+        font-family: sans-serif;
+        font-weight: 300;
+        font-size: 20px;
+      }
+
+
+      canvas {
+        position: absolute;
+        margin: auto;
+        left: 0;
+        right: 0;
+        z-index: 1;
+      }
+
+      #letters table tr td {
+        height: 50px;
+        width: 50px;
+        text-align: center;
+        vertical-align: center;
+      }
+
+      #letters table {
+        height: 300px;
+      }
+
+      #letters {
+        position: absolute;
+        display: inline;
+        margin: auto;
+        left: 0;
+        right: 0;
+        width: 650px;
+        top: 50px;
+        z-index: 3;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="letters">
+      <table>
+        <tr>
+          <td>A</td>
+          <td>B</td>
+          <td>C</td>
+          <td>D</td>
+          <td>E</td>
+          <td>F</td>
+          <td>G</td>
+          <td>H</td>
+          <td>I</td>
+          <td>J</td>
+          <td>K</td>
+          <td>L</td>
+          <td>M</td>
+        </tr>
+        <tr>
+          <td>N</td>
+          <td>O</td>
+          <td>P</td>
+          <td>Q</td>
+          <td>R</td>
+          <td>S</td>
+          <td>T</td>
+          <td>U</td>
+          <td>V</td>
+          <td>W</td>
+          <td>X</td>
+          <td>Y</td>
+          <td>Z</td>
+
+    </div>
+    <canvas id="myCanvas" width="650" height="300"></canvas>
+    <script>
+
+      // Created by AKJM (Alex Malone) in 2015.
+
+      // Input string
+      var input = "This is the input string, and you can change it to whatever you want.";
+
+      console.log("INPUT STRING: " + input);
+
+      var input = input.toUpperCase();
+      var iArray = input.split("");
+
+      // Remove whitespace
+      iArray = iArray.filter(function(str) {
+          return /\S/.test(str);
+      });
+
+      // For coords
+      var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+      var position = [25,75,125,175,225,275,325,375,425,475,525,575,625];
+
+      // Position checking function
+      function getPosition(letter) {
+        var output = [0,0];
+        var index = alphabet.indexOf(letter);
+
+        if (alphabet.indexOf(letter) < 13) {
+          output = [position[index],75];
+        }
+
+        else {
+          output = [position[index - 13], 225];
+        }
+
+        return output;
+      }
+
+      // Pythagoras' theorem
+      function lineDistance( point1, point2 ){
+        var xs = 0;
+        var ys = 0;
+
+        xs = point2.x - point1.x;
+        xs = xs * xs;
+
+        ys = point2.y - point1.y;
+        ys = ys * ys;
+
+        return Math.sqrt( xs + ys );
+      }
+
+      // Define canvas DOM element
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+
+      // Make sure code actually runs
+      window.onload = function() {
+
+      // Count through letters in input array
+      for (i=0;i<iArray.length;i++) {
+
+        // If the current letter isn't the final letter, isn't the same as the upcoming letter, and matches the regex statement (a-z characters)
+        if (i < (iArray.length - 1) && iArray[i] != iArray[i+1] && iArray[i].match(/^[A-Z]+$/)) {
+
+          // Don't really use this, was attempting something else
+          /*var p1 = {
+            x: getPosition(iArray[i])[0],
+            y: getPosition(iArray[i])[1],
+          }
+
+          var p2 = {
+            x: getPosition(iArray[i+1])[0],
+            y: getPosition(iArray[i+1])[1],
+          }*/
+
+          // Set the start point
+          context.beginPath();
+          context.moveTo(getPosition(iArray[i])[0], getPosition(iArray[i])[1]);
+
+        // Create a curve from point A to point B
+        context.bezierCurveTo(getPosition(iArray[i])[0],150,getPosition(iArray[i+1])[0],150,getPosition(iArray[i + 1])[0], getPosition(iArray[i + 1])[1])
+
+        // Add a gradient
+        var gradient=context.createLinearGradient(0,0,620,0);
+          gradient.addColorStop("0","rgba(231, 76, 60,0.1)");
+          gradient.addColorStop("0.5","rgba(52, 152, 219,0.1)");
+          gradient.addColorStop("0","rgba(231, 76, 60,0.1)");
+        context.strokeStyle = "rgba(231, 76, 60,0.1)";
+        context.strokeStyle=gradient;
+        context.lineWidth = 2;
+        context.stroke();
+          }
+        }
+
+      };
+
+
+    </script>
+  </body>
+</html>
