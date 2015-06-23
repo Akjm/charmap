@@ -1,5 +1,7 @@
 #Charmap - A character mapping HTML5 Canvas application
 
+![alt tag](http://i.imgur.com/pdv62m3.png)
+
 ##Changelog:
 ###Version 1.2:
 - Added input box
