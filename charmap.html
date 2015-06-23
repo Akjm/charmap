@@ -1,15 +1,86 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel=
+    'stylesheet' type='text/css'>
     <style>
       body {
         margin: 0px;
         padding: 0px;
         background-color: #202020;
         color: white;
-        font-family: sans-serif;
+        font-family: "Roboto";
         font-weight: 300;
         font-size: 20px;
+      }
+
+      textarea {
+        position: absolute;
+        margin: auto;
+        top: 300px;
+        width: 630px;
+        height: 180px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background-color: #202020;
+        border: 2px solid grey;
+        border-color: grey;
+        color: grey;
+        font-family: "Roboto";
+        padding: 10px;
+        font-size: 25px;
+        font-weight: 100;
+
+        transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+      }
+
+      button {
+        position: absolute;
+        margin: auto;
+        top: 520px;
+        width: 650px;
+        height: 70px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background-color: #202020;
+        border: 2px solid grey;
+        border-color: grey;
+        color: grey;
+        font-family: "Roboto";
+        font-size: 40px;
+        font-weight: 100;
+        text-align: left;
+        padding: 10px;
+
+        transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+      }
+
+      button:hover {
+        border-color: white;
+      }
+
+      button:focus {
+        border-color: white;
+        color: white;
+        box-shadow: none;
+        outline:none;
+      }
+
+      button:active {
+        transform: scale(1.025);
+      }
+
+      textarea:hover {
+        border-color: white;
+      }
+
+      textarea:focus {
+        border-color: white;
+        color: white;
+        box-shadow: none;
+        outline:none;
       }
 
 
@@ -19,6 +90,7 @@
         left: 0;
         right: 0;
         z-index: 1;
+        transition: all 0.9s ease-in-out;
       }
 
       #letters table tr td {
@@ -43,66 +115,29 @@
         z-index: 3;
       }
     </style>
-  </head>
-  <body>
+
+    <title></title>
+</head>
+
+<body>
     <div id="letters">
-      <table>
-        <tr>
-          <td>A</td>
-          <td>B</td>
-          <td>C</td>
-          <td>D</td>
-          <td>E</td>
-          <td>F</td>
-          <td>G</td>
-          <td>H</td>
-          <td>I</td>
-          <td>J</td>
-          <td>K</td>
-          <td>L</td>
-          <td>M</td>
-        </tr>
-        <tr>
-          <td>N</td>
-          <td>O</td>
-          <td>P</td>
-          <td>Q</td>
-          <td>R</td>
-          <td>S</td>
-          <td>T</td>
-          <td>U</td>
-          <td>V</td>
-          <td>W</td>
-          <td>X</td>
-          <td>Y</td>
-          <td>Z</td>
+        <canvas height="300" id="myCanvas" width="650"></canvas>
+        <textarea cols="30" id="input" name="message" placeholder=
+        "Type some text here" rows="10">
+</textarea><button onclick="generate()">Generate</button><script>
 
-    </div>
-    <canvas id="myCanvas" width="650" height="300"></canvas>
-    <script>
+        // Created by AKJM (Alex Malone) in 2015.
 
-      // Created by AKJM (Alex Malone) in 2015.
+        // Input string
 
-      // Input string
-      var input = "This is the input string, and you can change it to whatever you want.";
 
-      console.log("INPUT STRING: " + input);
+        // For coords
+        var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-      var input = input.toUpperCase();
-      var iArray = input.split("");
+        var position = [25,75,125,175,225,275,325,375,425,475,525,575,625];
 
-      // Remove whitespace
-      iArray = iArray.filter(function(str) {
-          return /\S/.test(str);
-      });
-
-      // For coords
-      var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-
-      var position = [25,75,125,175,225,275,325,375,425,475,525,575,625];
-
-      // Position checking function
-      function getPosition(letter) {
+        // Position checking function
+        function getPosition(letter) {
         var output = [0,0];
         var index = alphabet.indexOf(letter);
 
@@ -115,10 +150,10 @@
         }
 
         return output;
-      }
+        }
 
-      // Pythagoras' theorem
-      function lineDistance( point1, point2 ){
+        // Pythagoras' theorem
+        function lineDistance( point1, point2 ){
         var xs = 0;
         var ys = 0;
 
@@ -129,17 +164,35 @@
         ys = ys * ys;
 
         return Math.sqrt( xs + ys );
-      }
+        }
 
-      // Define canvas DOM element
-      var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
+        // Define canvas DOM element
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
 
-      // Make sure code actually runs
-      window.onload = function() {
+        document.getElementById("input").addEventListener("keydown", keyDownTextField, false);
+        function keyDownTextField (e) {
+          generate();
+          generate();
+        }
 
-      // Count through letters in input array
-      for (i=0;i<iArray.length;i++) {
+        // Make sure code actually runs
+        function generate() {
+        context.clearRect(0, 0, canvas.width, canvas.height)
+
+        var input = document.getElementById("input").value;
+
+        console.log("INPUT STRING: " + input);
+
+        var input = input.toUpperCase();
+        var iArray = input.split("");
+
+        // Remove whitespace
+        iArray = iArray.filter(function(str) {
+            return /\S/.test(str);
+        });
+        // Count through letters in input array
+        for (i=0;i<iArray.length;i++) {
 
         // If the current letter isn't the final letter, isn't the same as the upcoming letter, and matches the regex statement (a-z characters)
         if (i < (iArray.length - 1) && iArray[i] != iArray[i+1] && iArray[i].match(/^[A-Z]+$/)) {
@@ -164,9 +217,9 @@
 
         // Add a gradient
         var gradient=context.createLinearGradient(0,0,620,0);
-          gradient.addColorStop("0","rgba(231, 76, 60,0.1)");
-          gradient.addColorStop("0.5","rgba(52, 152, 219,0.1)");
-          gradient.addColorStop("0","rgba(231, 76, 60,0.1)");
+          gradient.addColorStop("0","rgba(231, 76, 60,0.4)");
+          gradient.addColorStop("0.5","rgba(52, 152, 219,0.4)");
+          gradient.addColorStop("0","rgba(231, 76, 60,0.4)");
         context.strokeStyle = "rgba(231, 76, 60,0.1)";
         context.strokeStyle=gradient;
         context.lineWidth = 2;
@@ -174,9 +227,68 @@
           }
         }
 
-      };
+        };
 
 
-    </script>
-  </body>
+        </script>
+
+        <table>
+            <tr>
+                <td>A</td>
+
+                <td>B</td>
+
+                <td>C</td>
+
+                <td>D</td>
+
+                <td>E</td>
+
+                <td>F</td>
+
+                <td>G</td>
+
+                <td>H</td>
+
+                <td>I</td>
+
+                <td>J</td>
+
+                <td>K</td>
+
+                <td>L</td>
+
+                <td>M</td>
+            </tr>
+
+            <tr>
+                <td>N</td>
+
+                <td>O</td>
+
+                <td>P</td>
+
+                <td>Q</td>
+
+                <td>R</td>
+
+                <td>S</td>
+
+                <td>T</td>
+
+                <td>U</td>
+
+                <td>V</td>
+
+                <td>W</td>
+
+                <td>X</td>
+
+                <td>Y</td>
+
+                <td>Z</td>
+            </tr>
+        </table>
+    </div>
+</body>
 </html>
