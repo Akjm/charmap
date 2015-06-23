@@ -1,5 +1,14 @@
-## Charmap
+#Charmap - A character mapping HTML5 Canvas application
 
-A simple HTML5 canvas character map thingy. Made in about 2 hours.
+##Changelog:
+###Version 1.2:
+- Added input box
+- Added submit button
+- Replaced font with Roboto
+- Added event listener for live-updates on the mapping
+- Reformated HTML code
 
-(Feel free to improve upon)
+###Version 1.0:
+- Created project
+- Added visuals
+- Added input variable
